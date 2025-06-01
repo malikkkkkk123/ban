@@ -12,6 +12,18 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 async def on_ready():
     print(f'Logged in as {bot.user.name}')
 
+@bot.event
+async def on_message(message):
+    if 'http:' in message.content:
+        await message.guild.ban(message.author, reason='idk')
+
+@bot.event
+async def on_member_join(member):
+    # Mengirim pesan ucapan selamat
+    for channel in member.guild.text_channels:
+        await channel.send(f'hello, {member.mention}!')
+
+
 @bot.command()
 async def start(ctx):
     await ctx.send("Hi! I'm a chat manager bot!")
@@ -27,6 +39,7 @@ async def ban(ctx, member: discord.Member = None):
             await ctx.send(f"User {member.name} was banned.")
     else:
         await ctx.send("This command should point to the user you want to ban. For example: `!ban @user`")
+
 
 @ban.error
 async def ban_error(ctx, error):
